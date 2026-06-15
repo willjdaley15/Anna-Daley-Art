@@ -179,6 +179,108 @@
     <div class="grid" id="grid"></div>
   </div>
 </section>
+========================================================================
+ GREETING CARDS SECTION — copy everything BELOW the dashed line and
+ paste it into index.html, just ABOVE this line in your file:
+
+        <!-- ============ PRINTS ============ -->
+
+ (i.e. right after the "Selected works" section closes and before the
+ "How it works" / Prints section begins.)
+
+ OPTIONAL — to add a "Cards" link to the top menu, find this line:
+        <a href="#works">Works</a>
+ and add this new line directly underneath it:
+        <a href="#cards">Cards</a>
+========================================================================
+
+<!-- ============ GREETING CARDS ============ -->
+<section class="cards" id="cards">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Greeting cards</h2>
+      <span class="eyebrow">£4 each · 3 for £10 · plus shipping</span>
+    </div>
+    <p class="cards-intro">A collection of hand-painted greeting cards featuring original artwork by Anna, printed on high quality card with blank inside for your own message.</p>
+    <div class="cards-grid" id="cardsGrid"></div>
+  </div>
+  <style>
+    section.cards{padding:46px 0 30px;border-top:1px solid var(--line)}
+    .cards .cards-intro{max-width:62ch;color:#3a3833;margin:0 0 34px}
+    .cards-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:36px 30px}
+    @media(max-width:900px){.cards-grid{grid-template-columns:repeat(2,1fr);gap:30px 24px}}
+    @media(max-width:560px){.cards-grid{grid-template-columns:1fr;gap:36px}}
+    .card-item{display:flex;flex-direction:column}
+    .card-art{background:var(--paper);padding:12px;border:1px solid var(--line);transition:transform .25s,box-shadow .25s}
+    .card-art svg,.card-art img{width:100%;aspect-ratio:148/210;object-fit:cover;display:block}
+    .card-item:hover .card-art{transform:translateY(-4px);box-shadow:0 22px 40px -28px rgba(28,27,25,.5)}
+    @media(prefers-reduced-motion:reduce){.card-art{transition:none}.card-item:hover .card-art{transform:none}}
+    .card-placard{margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
+    .card-ttl{font-family:"Fraunces",Georgia,serif;font-size:17px;font-style:italic}
+    .card-meta{font-size:12.5px;color:var(--muted);margin-top:2px}
+    .card-foot{display:flex;align-items:center;justify-content:space-between;margin-top:12px;gap:10px}
+    .card-price{font-weight:600;letter-spacing:.02em}
+    .card-buy{font:inherit;font-weight:600;font-size:13px;border:1px solid var(--line);background:#fff;color:var(--muted);padding:7px 13px;border-radius:2px;cursor:not-allowed;text-decoration:none;white-space:nowrap}
+    .card-buy.active{background:var(--accent);color:#fff;border-color:var(--accent);cursor:pointer}
+    .card-buy.active:hover{opacity:.92}
+  </style>
+  <script>
+  (function(){
+    /* =====================================================================
+       EDIT YOUR CARDS HERE
+       ---------------------------------------------------------------------
+       • Show a real card photo:  set  image:"card1.jpg"  (upload the photo
+         to GitHub the same way as paintings) and delete the  art:  bit.
+       • Turn on buying later:    paste a Stripe Payment Link into
+         stripe:"https://buy.stripe.com/..."  — the button switches on by
+         itself. Leave it as ""  to show "Buy — coming soon".
+       • Add / remove a card:     copy or delete one  { ... }  line.
+       ===================================================================== */
+    var CARDS = [
+      { title:"Spring Meadow",   art:1, stripe:"" },
+      { title:"Harbour Lights",  art:2, stripe:"" },
+      { title:"Winter Robin",    art:3, stripe:"" },
+      { title:"Bluebell Wood",   art:4, stripe:"" },
+      { title:"Autumn Hedgerow", art:5, stripe:"" },
+      { title:"Coastal Path",    art:6, stripe:"" }
+    ];
+
+    /* ---- placeholder card art (swap for real photos via image:) ---- */
+    var CP=[["#eef0ea","#bcd0c9","#7fa39a"],["#cfe0e6","#7fa6b0","#3b6b78"],
+            ["#f3e2cf","#e3a473","#a85f4a"],["#e7e1ee","#bba9d0","#6f5e8c"],
+            ["#f0e7d6","#d9b27c","#8a9a6b"],["#d7e2e6","#8aa6ac","#566f73"]];
+    function cardSVG(i){
+      var p=CP[(i-1+CP.length)%CP.length]||CP[0];
+      return '<svg viewBox="0 0 296 420" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hand-painted card design">'
+        +'<rect width="296" height="420" fill="'+p[0]+'"/>'
+        +'<circle cx="156" cy="170" r="86" fill="'+p[1]+'" opacity=".5"/>'
+        +'<path d="M148 92 C116 140 116 214 148 264 C180 214 180 140 148 92 Z" fill="'+p[2]+'" opacity=".82"/>'
+        +'<path d="M148 250 L148 344" stroke="'+p[2]+'" stroke-width="3" opacity=".6"/>'
+        +'<path d="M104 246 C132 228 150 244 150 244 C150 244 126 266 104 246 Z" fill="'+p[2]+'" opacity=".55"/>'
+        +'<path d="M196 284 C168 266 148 282 148 282 C148 282 172 302 196 284 Z" fill="'+p[2]+'" opacity=".55"/>'
+        +'</svg>';
+    }
+
+    var grid=document.getElementById("cardsGrid");
+    if(grid){
+      CARDS.forEach(function(c,idx){
+        var live=c.stripe && c.stripe.trim().length>0;
+        var visual=c.image?'<img src="'+c.image+'" alt="'+c.title+'">':cardSVG(c.art||idx+1);
+        var buy=live
+          ?'<a class="card-buy active" href="'+c.stripe+'" target="_blank" rel="noopener">Buy</a>'
+          :'<span class="card-buy">Buy — coming soon</span>';
+        var el=document.createElement("article");
+        el.className="card-item";
+        el.innerHTML='<div class="card-art">'+visual+'</div>'
+          +'<div class="card-placard"><div class="card-ttl">'+c.title+'</div>'
+          +'<div class="card-meta">A5 · individually hand-painted</div>'
+          +'<div class="card-foot"><span class="card-price">£4</span>'+buy+'</div></div>';
+        grid.appendChild(el);
+      });
+    }
+  })();
+  </script>
+</section>
 
 <!-- ============ PRINTS ============ -->
 <section class="prints" id="prints">
